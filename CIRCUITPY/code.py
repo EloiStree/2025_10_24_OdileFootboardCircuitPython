@@ -1,7 +1,9 @@
 # ----------------------------------------------------------------------------
 # Raspberry Pi Pico - HID Keyboard + Mouse Input with Debouncing
 # ----------------------------------------------------------------------------
-# https://github.com/EloiStree/License
+# Source of the code:
+# https://github.com/EloiStree/2025_10_24_OdileFootboardCircuitPython
+# LICENSE: https://github.com/EloiStree/License
 # ----------------------------------------------------------------------------
 
 import sys
@@ -72,6 +74,24 @@ def func_odile_enter():
     time.sleep(0.05)
     keyboard.release(Keycode.ENTER)
 
+
+def on_change_button_a(new_value_pressing: bool):
+    print(f"Button A changed to: {new_value_pressing}")
+    if new_value_pressing == False:
+        func_odile_click()
+
+def on_change_button_b(new_value_pressing: bool):
+    print(f"Button B changed to: {new_value_pressing}")
+    if new_value_pressing == False:
+        func_odile_enter()
+
+def on_change_button_c(new_value_pressing: bool):
+    print(f"Button C changed to: {new_value_pressing}")
+    #on release
+    if new_value_pressing == False:
+        func_odile_triple_click()
+
+
 # -------------------------------------------------------------------------
 # Main Loop
 # -------------------------------------------------------------------------
@@ -85,23 +105,21 @@ while True:
 
     # ----- Button A (GPIO26) -----
     if button_a.fell:
-        print("Button A pressed")
+        on_change_button_a(True)
     if button_a.rose:
-        print("Button A released")
-        func_odile_click()
+        on_change_button_a(False)
 
     # ----- Button B (GPIO11) -----
     if button_b.fell:
-        print("Button B pressed")
+        on_change_button_b(True)
     if button_b.rose:
-        print("Button B released")
-        func_odile_triple_click()
+        on_change_button_b(False)
 
     # ----- Button C (GPIO4) -----
     if button_c.fell:
-        print("Button C pressed")
-        func_odile_enter()
+        on_change_button_c(True)
     if button_c.rose:
-        print("Button C released")
+        on_change_button_c(False)
 
     time.sleep(0.01)  # Small loop delay for stability
+
